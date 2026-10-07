@@ -17,13 +17,18 @@ app.use(express.json());
 
 // Cấu hình Stateless Session lưu trực tiếp trên MongoDB Atlas
 app.use(session({
+    name: 'book.sid',
     secret: process.env.SESSION_SECRET || 'bi_mat_207',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
         client: writeConnection.getClient()
     }),
-    cookie: { maxAge: 1000 * 60 * 60 * 24 }
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true,
+        sameSite: 'lax'
+    }
 }));
 
 // Middleware truyền biến chung cho Footer (Họ tên, MSSV, VAT) vào mọi trang Handlebars
