@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Sách - 23IT207</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f9;
+        }
+
+        h1,
+        h2 {
+            color: #333;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-weight: bold;
+            color: #555;
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+
+        .message.success {
+            background: #e8f7ee;
+            color: #146c2e;
+            border: 1px solid #9bd4ad;
+        }
+
+        .message.error {
+            background: #fdecec;
+            color: #b42318;
+            border: 1px solid #f3b8b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Quản Lý Sách Đám Mây (23IT207)</h1>
+
+    {{#if successMessage}}
+    <div class="message success">{{successMessage}}</div>
+    {{/if}}
+
+    {{#if errorMessage}}
+    <div class="message error">{{errorMessage}}</div>
+    {{/if}}
+
+    <!-- Form Thêm Sách (Dùng kết nối Ghi - Writer) -->
+    <section>
+        <h2>Thêm Sách Mới</h2>
+        <form action="/add-book" method="POST">
+            <label>Mã sản phẩm (Phải bắt đầu bằng 207):</label>
+            <input type="text" name="productId" placeholder="VD: 207BK001" value="{{formData.productId}}" required>
+
+            <label>Tên sách:</label>
+            <input type="text" name="title" placeholder="Nhập tên sách" value="{{formData.title}}" required>
+
+            <label>Tác giả:</label>
+            <input type="text" name="author" placeholder="Nhập tên tác giả" value="{{formData.author}}" required>
+
+            <label>Giá gốc (VNĐ):</label>
+            <input type="number" name="priceOriginal" placeholder="Nhập giá gốc" min="0" value="{{formData.priceOriginal}}" required>
+
+            <button type="submit">Thêm Sách (Ghi Database)</button>
+        </form>
+    </section>
+
+    <!-- Bảng Hiển Thị Danh Sách Sách (Dùng kết nối Đọc - Reader) -->
+    <section>
+        <h2>Danh Sách Sách Hiện Có</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã SP</th>
+                    <th>Tên Sách</th>
+                    <th>Tác Giả</th>
+                    <th>Giá Gốc</th>
+                    <th>Giá Sau Thuế (VAT 13%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each books}}
+                <tr>
+                    <td>{{this.productId}}</td>
+                    <td>{{this.title}}</td>
+                    <td>{{this.author}}</td>
+                    <td>{{this.priceOriginal}} VNĐ</td>
+                    <td><b>{{this.priceWithVAT}} VNĐ</b></td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td colspan="5" style="text-align: center;">Chưa có dữ liệu sách nào.</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Footer bắt buộc theo đề bài -->
+    <footer>
+        <p>Họ tên: {{footerInfo.fullName}} | MSSV: {{footerInfo.mssv}} | Mức VAT áp dụng: {{footerInfo.vatRate}}</p>
+    </footer>
+
+</body>
+
+</html>
