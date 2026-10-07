@@ -60,10 +60,15 @@ function formatBooks(books) {
     }));
 }
 
+async function getBooks() {
+    const model = readConnection.readyState === 1 ? BookReader : BookWriter;
+    return model.find({}).lean();
+}
+
 // Route ĐỌC: Lấy danh sách sách (Sử dụng kết nối READER)
 app.get('/', async (req, res) => {
     try {
-        const books = await BookReader.find({}).lean();
+        const books = await getBooks();
         res.render('index', {
             books: formatBooks(books),
             successMessage: req.query.success ? 'Thêm sách thành công!' : null
@@ -95,7 +100,7 @@ app.post('/add-book', async (req, res) => {
 
         let books = [];
         try {
-            books = await BookReader.find({}).lean();
+            books = await getBooks();
         } catch (readErr) {
             console.error('Không thể tải danh sách sách sau khi thêm lỗi:', readErr);
         }
