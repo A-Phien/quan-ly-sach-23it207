@@ -4,7 +4,8 @@ dns.setDefaultResultOrder('ipv4first');
 require('dotenv').config();
 
 const connectionOptions = {
-    tlsAllowInvalidCertificates: true
+    tlsAllowInvalidCertificates: true,
+    serverSelectionTimeoutMS: 10000
 };
 
 // Kết nối tài khoản đọc (Reader)
